@@ -17,6 +17,9 @@
 #include <chrono>  // for high_resolution_clock
 #include <sstream>
 #include <cmath>
+#include <filesystem>
+
+using namespace std;
 
 
 
@@ -57,4 +60,58 @@ TH1D *getUnderflow(TH1D *h_Sample){
     h_Sample->SetBinError(0, 0.0);
     
     return h_Sample;
+}
+
+
+double getInvariantMass(ROOT::VecOps::RVec<float> muon_pt, ROOT::VecOps::RVec<float> muon_eta, ROOT::VecOps::RVec<float> muon_phi, ROOT::VecOps::RVec<float> muon_e)
+{
+    TLorentzVector tlv1;
+    TLorentzVector tlv2;
+
+    tlv1.SetPtEtaPhiE(muon_pt.at(0), muon_eta.at(0), muon_phi.at(0), muon_e.at(0));
+    tlv2.SetPtEtaPhiE(muon_pt.at(1), muon_eta.at(1), muon_phi.at(1), muon_e.at(1));
+
+    return (tlv1 + tlv2).M();
+}
+
+
+/// prepare many 2D maps with one key
+class manyMaps{
+  private:
+    string keyname;
+    string key_y, key_x;
+    ROOT::RDF::TH2DModel mod;
+    map<string, ROOT::RDF::TH2DModel> string2TH2DMod; 
+    map<string, string> string2first;
+    map<string, string> string2second;
+
+  public:
+    manyMaps(string, string, string, ROOT::RDF::TH2DModel);
+    ROOT::RDF::TH2DModel outTH2DModel(string keyname){
+        return string2TH2DMod[keyname];
+    };
+    string outFirst(string keyname){
+        return string2first[keyname];
+    };
+    string outSecond(string keyname){
+        return string2second[keyname];
+    };
+};
+
+manyMaps::manyMaps(string keyname_, string key_x_, string key_y_, ROOT::RDF::TH2DModel mod_) {
+  string2TH2DMod.insert(make_pair(keyname_,mod_));
+  string2first.insert(make_pair(keyname_,key_x_));
+  string2second.insert(make_pair(keyname_,key_y_));
+}
+
+
+/// get the number of files in a directory
+std::size_t number_of_files_in_directory(std::filesystem::path path)
+{
+    std::size_t number_of_files = 0u;
+    for (auto const & file : std::filesystem::directory_iterator(path))
+    {
+        ++number_of_files;
+    }
+    return number_of_files;
 }
