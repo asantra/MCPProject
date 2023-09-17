@@ -189,6 +189,7 @@ void makeMuonHist(string inputFolder, string outputFile, string sampleTag = "Dat
     /// filter out all events with low muons or low pt
     auto dCut = d.Filter("!(muon_pt.size() < 2)")
                  .Filter("!(muon_pt.at(0) < 25.)")
+                /// selection based on eta cut
                 //  .Filter("!(std::abs(muon_eta.at(0)) > 1.05)")
                 //  .Filter("!(std::abs(muon_eta.at(1)) > 1.05)")
                  .Define("mll", "getInvariantMass(muon_pt, muon_eta, muon_phi, muon_e)")
@@ -212,6 +213,9 @@ void makeMuonHist(string inputFolder, string outputFile, string sampleTag = "Dat
                  .Define("muon_Tight_1", "muon_Tight[1]");
 
 
+    /////////////////////////////////////////////////
+    // Barrel region                              ///
+    /////////////////////////////////////////////////
     /// define different df based on working point
     auto dCutMedium = dCut.Filter("!(std::abs(muon_eta.at(0)) > 1.05) && !(std::abs(muon_eta.at(1)) > 1.05)").Filter("muon_Medium[0] && muon_Medium[1]");
     auto dCutHigh   = dCut.Filter("!(std::abs(muon_eta.at(0)) > 1.05) && !(std::abs(muon_eta.at(1)) > 1.05)").Filter("muon_HighPt[0] && muon_HighPt[1]");
@@ -236,6 +240,7 @@ void makeMuonHist(string inputFolder, string outputFile, string sampleTag = "Dat
     prepare1DHistogram(dCutHigh, "highpt", allHisto1Dict, prepared1DHistogram);
     prepare2DHistogram(dCutHigh, "highpt", allHisto2Dict, prepared2DHistogram);
 
+    ///  turned off the following to speed up things
     // //////////////////////////////
     // /// low-pt working point ////
     // //////////////////////////////
@@ -249,6 +254,9 @@ void makeMuonHist(string inputFolder, string outputFile, string sampleTag = "Dat
     // prepare2DHistogram(dCutTight, "tight", allHisto2Dict, prepared2DHistogram);
 
 
+    /////////////////////////////////////////////////
+    // End cap region                             ///
+    /////////////////////////////////////////////////
     /// define different df based on working point
     auto dCutMedium_EC = dCut.Filter("!(std::abs(muon_eta.at(0)) < 1.3) && !(std::abs(muon_eta.at(1)) < 1.3)").Filter("muon_Medium[0] && muon_Medium[1]");
     auto dCutHigh_EC   = dCut.Filter("!(std::abs(muon_eta.at(0)) < 1.3) && !(std::abs(muon_eta.at(1)) < 1.3)").Filter("muon_HighPt[0] && muon_HighPt[1]");
@@ -270,6 +278,9 @@ void makeMuonHist(string inputFolder, string outputFile, string sampleTag = "Dat
     prepare1DHistogram(dCutHigh_EC, "EC_highpt", allHisto1Dict_EC, prepared1DHistogram_EC);
     prepare2DHistogram(dCutHigh_EC, "EC_highpt", allHisto2Dict_EC, prepared2DHistogram_EC);
 
+    /////////////////////////////////////////////////
+    // Save histograms                            ///
+    /////////////////////////////////////////////////
     /// write the histograms to the root file, barrel
     for (map<string, TH1D*>::iterator it = prepared1DHistogram.begin(); it != prepared1DHistogram.end(); ++it){
         it->second->Write(it->first.c_str());
@@ -285,6 +296,7 @@ void makeMuonHist(string inputFolder, string outputFile, string sampleTag = "Dat
         it->second->Write(it->first.c_str());
     }
     myFile->Close();
+    
     // Record end time
     auto finish = std::chrono::steady_clock::now();
     auto diff = finish - start;
