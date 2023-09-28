@@ -19,22 +19,22 @@ root -l << EOF
 // AOD files, with NSW hits in the endcap ///
 /////////////////////////////////////////////////
 /// data23 - highest number of events
-//makeMuonHist("user.asantra.data23_13p6TeV.00456409.physics_Main.merge.AOD.f1369_m2191.MCP_TESTNTUP_ANALYSIS.root", "muonAnalysisAOD_data23_00456409.root")
+makeMuonHist("user.asantra.data23_13p6TeV.00456409.physics_Main.merge.AOD.f1369_m2191.MCP_TESTNTUP_ANALYSIS.root", "muonAnalysisAOD_MuTrigandMCut_data23_00456409.root")
 /// data23 - second highest number of events
-// makeMuonHist("user.asantra.data23_13p6TeV.00451037.physics_Main.merge.AOD.f1345_m2167.MCP_TESTNTUP_ANALYSIS.root", "muonAnalysisAOD_data23_00451037.root")
+makeMuonHist("user.asantra.data23_13p6TeV.00451037.physics_Main.merge.AOD.f1345_m2167.MCP_TESTNTUP_ANALYSIS.root", "muonAnalysisAOD_MuTrigandMCut_data23_00451037.root")
 /// data23 - third highest number of events
-// makeMuonHist("user.asantra.data23_13p6TeV.00452843.physics_Main.merge.AOD.f1354_m2173.MCP_TESTNTUP_ANALYSIS.root", "muonAnalysisAOD_data23_00452843.root")
+makeMuonHist("user.asantra.data23_13p6TeV.00452843.physics_Main.merge.AOD.f1354_m2173.MCP_TESTNTUP_ANALYSIS.root", "muonAnalysisAOD_MuTrigandMCut_data23_00452843.root")
 /// data23 - fourth highest number of events
-// makeMuonHist("user.asantra.data23_13p6TeV.00456110.physics_Main.merge.AOD.f1367_m2185.MCP_TESTNTUP_ANALYSIS.root", "muonAnalysisAOD_data23_00456110.root")
+makeMuonHist("user.asantra.data23_13p6TeV.00456110.physics_Main.merge.AOD.f1367_m2185.MCP_TESTNTUP_ANALYSIS.root", "muonAnalysisAOD_MuTrigandMCut_data23_00456110.root")
 /////////////////////////////////////////////////
 // AOD files, without NSW hits in the endcap ///
 /////////////////////////////////////////////////
 /// data23 - highest number of events
-makeMuonHist("user.asantra.data23_13p6TeV.00456409.physics_Main.merge.AOD.f1369_m2191.MCP_TESTNTUP_NoNSW_ANALYSIS.root", "muonAnalysisAODNoNSW_data23_00456409.root")
+//makeMuonHist("user.asantra.data23_13p6TeV.00456409.physics_Main.merge.AOD.f1369_m2191.MCP_TESTNTUP_NoNSW_ANALYSIS.root", "muonAnalysisAODNoNSW_data23_00456409.root")
 /// data23 - second highest number of events
-makeMuonHist("user.asantra.data23_13p6TeV.00451037.physics_Main.merge.AOD.f1345_m2167.MCP_TESTNTUP_NoNSW_ANALYSIS.root", "muonAnalysisAODNoNSW_data23_00451037.root")
+//makeMuonHist("user.asantra.data23_13p6TeV.00451037.physics_Main.merge.AOD.f1345_m2167.MCP_TESTNTUP_NoNSW_ANALYSIS.root", "muonAnalysisAODNoNSW_data23_00451037.root")
 /// data23 - third highest number of events
-makeMuonHist("user.asantra.data23_13p6TeV.00452843.physics_Main.merge.AOD.f1354_m2173.MCP_TESTNTUP_NoNSW_ANALYSIS.root", "muonAnalysisAODNoNSW_data23_00452843.root")
+//makeMuonHist("user.asantra.data23_13p6TeV.00452843.physics_Main.merge.AOD.f1354_m2173.MCP_TESTNTUP_NoNSW_ANALYSIS.root", "muonAnalysisAODNoNSW_data23_00452843.root")
 /// data23 - fourth highest number of events
 // makeMuonHist("user.asantra.data23_13p6TeV.00456110.physics_Main.merge.AOD.f1367_m2185.MCP_TESTNTUP_NoNSW_ANALYSIS.root", "muonAnalysisAODNoNSW_data23_00456110.root")
 EOF
