@@ -188,10 +188,15 @@ void makeMuonHist(string inputFolder, string outputFile, string sampleTag = "Dat
 
     /// filter out all events with low muons or low pt
     auto dCut = d.Filter("!(muon_pt.size() < 2)")
-                 .Filter("!(muon_pt.at(0) < 25.)")
-                /// selection based on eta cut
-                //  .Filter("!(std::abs(muon_eta.at(0)) > 1.05)")
-                //  .Filter("!(std::abs(muon_eta.at(1)) > 1.05)")
+                 /// add HLT24 trigger cut
+                 .Filter("!(muon_pt[0] < 25.)")
+                 .Filter("!(muon_pt[1] < 25.)")
+                 /// add ivarmedium trigger cut
+                 .Filter("muon_ptvarcone30[0]/muon_pt[0] < 0.07")
+                 .Filter("muon_ptvarcone30[1]/muon_pt[1] < 0.07")
+                 /// selection based on eta cut
+                 ///  .Filter("!(std::abs(muon_eta.at(0)) > 1.05)")
+                 ///  .Filter("!(std::abs(muon_eta.at(1)) > 1.05)")
                  .Define("mll", "getInvariantMass(muon_pt, muon_eta, muon_phi, muon_e)")
                  .Define("muon_nprecisionLayers_0", "muon_nprecisionLayers[0]")
                  .Define("muon_nprecisionLayers_1", "muon_nprecisionLayers[1]")
@@ -217,10 +222,11 @@ void makeMuonHist(string inputFolder, string outputFile, string sampleTag = "Dat
     // Barrel region                              ///
     /////////////////////////////////////////////////
     /// define different df based on working point
-    auto dCutMedium = dCut.Filter("!(std::abs(muon_eta.at(0)) > 1.05) && !(std::abs(muon_eta.at(1)) > 1.05)").Filter("muon_Medium[0] && muon_Medium[1]");
-    auto dCutHigh   = dCut.Filter("!(std::abs(muon_eta.at(0)) > 1.05) && !(std::abs(muon_eta.at(1)) > 1.05)").Filter("muon_HighPt[0] && muon_HighPt[1]");
-    auto dCutLow    = dCut.Filter("!(std::abs(muon_eta.at(0)) > 1.05) && !(std::abs(muon_eta.at(1)) > 1.05)").Filter("muon_LowPt[0] && muon_LowPt[1]");
-    auto dCutTight  = dCut.Filter("!(std::abs(muon_eta.at(0)) > 1.05) && !(std::abs(muon_eta.at(1)) > 1.05)").Filter("muon_Tight[0] && muon_Tight[1]");
+    /// only selecting the Z-peak
+    auto dCutMedium = dCut.Filter("!(std::abs(muon_eta.at(0)) > 1.05) && !(std::abs(muon_eta.at(1)) > 1.05)").Filter("muon_Medium[0] && muon_Medium[1]").Filter("80 < mll && mll < 100");
+    auto dCutHigh   = dCut.Filter("!(std::abs(muon_eta.at(0)) > 1.05) && !(std::abs(muon_eta.at(1)) > 1.05)").Filter("muon_HighPt[0] && muon_HighPt[1]").Filter("80 < mll && mll < 100");
+    auto dCutLow    = dCut.Filter("!(std::abs(muon_eta.at(0)) > 1.05) && !(std::abs(muon_eta.at(1)) > 1.05)").Filter("muon_LowPt[0] && muon_LowPt[1]").Filter("80 < mll && mll < 100");
+    auto dCutTight  = dCut.Filter("!(std::abs(muon_eta.at(0)) > 1.05) && !(std::abs(muon_eta.at(1)) > 1.05)").Filter("muon_Tight[0] && muon_Tight[1]").Filter("80 < mll && mll < 100");
 
 
     /// map to store histograms
@@ -258,8 +264,8 @@ void makeMuonHist(string inputFolder, string outputFile, string sampleTag = "Dat
     // End cap region                             ///
     /////////////////////////////////////////////////
     /// define different df based on working point
-    auto dCutMedium_EC = dCut.Filter("!(std::abs(muon_eta.at(0)) < 1.3) && !(std::abs(muon_eta.at(1)) < 1.3)").Filter("muon_Medium[0] && muon_Medium[1]");
-    auto dCutHigh_EC   = dCut.Filter("!(std::abs(muon_eta.at(0)) < 1.3) && !(std::abs(muon_eta.at(1)) < 1.3)").Filter("muon_HighPt[0] && muon_HighPt[1]");
+    auto dCutMedium_EC = dCut.Filter("!(std::abs(muon_eta.at(0)) < 1.3) && !(std::abs(muon_eta.at(1)) < 1.3)").Filter("muon_Medium[0] && muon_Medium[1]").Filter("80 < mll && mll < 100");
+    auto dCutHigh_EC   = dCut.Filter("!(std::abs(muon_eta.at(0)) < 1.3) && !(std::abs(muon_eta.at(1)) < 1.3)").Filter("muon_HighPt[0] && muon_HighPt[1]").Filter("80 < mll && mll < 100");
 
 
     /// map to store histograms

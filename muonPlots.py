@@ -121,18 +121,23 @@ def DrawHistsRatio(FirstTH1, LegendName, PlotColor, xrange1down, xrange1up, yran
 def main():
     gROOT.SetBatch()
     parser = argparse.ArgumentParser(description='Code to plot muon distributions')
-    parser.add_argument('-i', default="muonAnalysis_data22_DF.root", type=str)
+    parser.add_argument('-i1', default="muonAnalysis_data22_DF.root", type=str)
+    parser.add_argument('-comp', action='store_true')
+    parser.add_argument('-i2', default="muonAnalysis_data22_DF.root", type=str)
     args = parser.parse_args()
 
-    inName = args.i
-    outDirExtension = inName.split('.root')[0]
+    inName1 = args.i1
+    if(args.comp): inName2 = args.i2
+    outDirExtension = inName1.split('.root')[0]
+    
     outDir = "muCompDist_"+outDirExtension
     if not os.path.exists(outDir):
         os.makedirs(outDir)
 
     ### get the root file
     inDir = "/Users/arkasantra/arka/MCPWork/MCPFiles/HistFiles"
-    inFile = TFile(inDir+"/"+inName, "READ")
+    inFile1 = TFile(inDir+"/"+inName1, "READ")
+    if(args.comp): inFile2 = TFile(inDir+"/"+inName2, "READ")
 
     ### add the histogram names
     histogramNames = ["mll", "muon_nprecisionLayers_0", "muon_nprecisionLayers_1", "muon_qOverPsignif_0", "muon_qOverPsignif_1", "muon_pt_0", "muon_pt_1", "muon_pt_0", "muon_phi_0", "muon_phi_1", "muon_eta_0", "muon_eta_1", "muon_eta_vs_phi_0", "muon_eta_vs_phi_1"]
@@ -159,8 +164,8 @@ def main():
            suf = '_EC'
 
         ### get histograms
-        firstTH1  = inFile.Get(names+suf+"_medium")
-        secondTH1 = inFile.Get(names+suf+"_highpt")
+        firstTH1  = inFile1.Get(names+suf+"_medium")
+        secondTH1 = inFile1.Get(names+suf+"_highpt")
         strType = str(type(firstTH1))
 
         ### plot 2D COLZ plots
@@ -208,6 +213,56 @@ def main():
               h2.GetYaxis().SetTitle("#frac{medium}{highpt}")
 
               DrawHistsRatio(FirstTH1, LegendName, PlotColor, xAxisLow, xAxisHigh, yAxisLow, yAxisHigh, xAxisTitle, outDir+"/"+FirstTH1[0].GetName(), h2, 1.0, 1.0, drawline, logy, latexName, latexName2, TeVTag, doSumw2, doAtlas, doLumi, noRatio, do80, do59)
+
+
+
+        ### if we want to compare between NSW and no NSW situation
+        if(args.comp):
+          LegendName  = ["Medium (w NSW)", "Medium (w/o NSW)"]
+          firstTH1  = inFile1.Get(names+suf+"_medium")
+          secondTH1 = inFile2.Get(names+suf+"_medium")
+          strType = str(type(firstTH1))
+
+          ### plot 2D COLZ plots
+          if 'TH2' in strType: continue
+          
+          logy        = True
+          latexName2  = sector
+          FirstTH1    = [firstTH1, secondTH1]
+          xAxisLow    = FirstTH1[0].GetXaxis().GetBinCenter(1)
+          xAxisHigh   = FirstTH1[0].GetXaxis().GetBinCenter(FirstTH1[0].GetNbinsX())
+          
+          yAxisHigh   = FirstTH1[0].GetMaximum()*4e1
+          yAxisLow    = 5
+          xAxisTitle  = FirstTH1[0].GetXaxis().GetTitle()
+
+          h2 = FirstTH1[0].Clone("h2")
+          h2.Reset()
+          h2.GetYaxis().SetTitle("#frac{w NSW}{w/o NSW}")
+
+          DrawHistsRatio(FirstTH1, LegendName, PlotColor, xAxisLow, xAxisHigh, yAxisLow, yAxisHigh, xAxisTitle, outDir+"/"+FirstTH1[0].GetName()+"_MediumNSWComparison", h2, 1.0, 1.0, drawline, logy, latexName, latexName2, TeVTag, doSumw2, doAtlas, doLumi, noRatio, do80, do59)
+          
+          
+          
+          LegendName  = ["High p_{T} (w NSW)", "High p_{T} (w/o NSW)"]
+          firstTH1  = inFile1.Get(names+suf+"_highpt")
+          secondTH1 = inFile2.Get(names+suf+"_highpt")
+          
+          logy        = True
+          latexName2  = sector
+          FirstTH1    = [firstTH1, secondTH1]
+          xAxisLow    = FirstTH1[0].GetXaxis().GetBinCenter(1)
+          xAxisHigh   = FirstTH1[0].GetXaxis().GetBinCenter(FirstTH1[0].GetNbinsX())
+          
+          yAxisHigh   = FirstTH1[0].GetMaximum()*4e1
+          yAxisLow    = 5
+          xAxisTitle  = FirstTH1[0].GetXaxis().GetTitle()
+
+          h2 = FirstTH1[0].Clone("h2")
+          h2.Reset()
+          h2.GetYaxis().SetTitle("#frac{w NSW}{w/o NSW}")
+
+          DrawHistsRatio(FirstTH1, LegendName, PlotColor, xAxisLow, xAxisHigh, yAxisLow, yAxisHigh, xAxisTitle, outDir+"/"+FirstTH1[0].GetName()+"_HighPtNSWComparison", h2, 1.0, 1.0, drawline, logy, latexName, latexName2, TeVTag, doSumw2, doAtlas, doLumi, noRatio, do80, do59)
       
 
 
